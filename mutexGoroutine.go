@@ -7,14 +7,13 @@ import (
 	"time"
 )
 
-//并发互斥锁模型
+//互斥锁并发模型
 
-var tickers = 10 // 十张车票
+var tickers = 10      // 十张车票
 var wg sync.WaitGroup // 同步等待组
-var mutex sync.Mutex // 互斥锁
+var mutex sync.Mutex  // 互斥锁
 
-
-func main(){
+func main() {
 	wg.Add(4)
 	go saleTickets("售票口1")
 	go saleTickets("售票口2")
@@ -23,7 +22,7 @@ func main(){
 	wg.Wait()
 }
 
-func saleTickets(name string){
+func saleTickets(name string) {
 	defer wg.Done() // 同步锁执行完毕
 	rand.Seed(time.Now().UnixNano())
 	for {
@@ -32,7 +31,7 @@ func saleTickets(name string){
 			//休息一下 更方便展示效果
 			time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 			fmt.Println(name, "售出:", tickers)
-			tickers --
+			tickers--
 		} else {
 			mutex.Unlock()
 			fmt.Println(name, "售罄！")
